@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCR com Express e Tesseract.js</title>
+</head>
+<body>
+  <h1>OCR com Express e Tesseract.js</h1>
+
+  <form action="/ocr" method="post" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" required>
+    <button type="submit">Enviar</button>
+  </form>
+
+  <div id="output-text"></div>
+
+  <script>
+    const formElement = document.querySelector('form');
+    const outputElement = document.getElementById('output-text');
+
+    formElement.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      // Obter o arquivo do formulário
+      const formData = new FormData(formElement);
+      const imageFile = formData.get('image');
+
+      // Enviar o arquivo para o servidor
+      const response = await fetch('/ocr', {
+        method: 'POST',
+        body: formData,
+      });
+
+      // Exibir a resposta do servidor
+      const data = await response.json();
+      outputElement.textContent = data.text;
+    });
+  </script>
+</body>
+</html>
